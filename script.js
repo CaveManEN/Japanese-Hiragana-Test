@@ -1,3 +1,10 @@
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
 const hiraganaChars = [
     { character: "あ", romanized: "a", choices: ["a", "i", "u", "e", "o"] },
     { character: "い", romanized: "i", choices: ["a", "i", "u", "e", "o"] },
