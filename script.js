@@ -1,49 +1,75 @@
-var generateBtn = document.querySelector("#generate");
+const hiraganaChars = [
+    { character: "あ", romanized: "a", choices: ["a", "i", "u", "e", "o"] },
+    { character: "い", romanized: "i", choices: ["a", "i", "u", "e", "o"] },
+    { character: "う", romanized: "u", choices: ["a", "i", "u", "e", "o"] },
+    { character: "え", romanized: "e", choices: ["a", "i", "u", "e", "o"] },
+    { character: "お", romanized: "o", choices: ["a", "i", "u", "e", "o"] },
+    { character: "か", romanized: "ka", choices: ["ka", "ki", "ku", "ke", "ko"] },
+    { character: "き", romanized: "ki", choices: ["ka", "ki", "ku", "ke", "ko"] },
+    { character: "く", romanized: "ku", choices: ["ka", "ki", "ku", "ke", "ko"] },
+    { character: "け", romanized: "ke", choices: ["ka", "ki", "ku", "ke", "ko"] },
+    { character: "こ", romanized: "ko", choices: ["ka", "ki", "ku", "ke", "ko"] },
+    { character: "さ", romanized: "sa", choices: ["sa", "shi", "su", "se", "so"] },
+    { character: "し", romanized: "shi", choices: ["sa", "shi", "su", "se", "so"] },
+    { character: "す", romanized: "su", choices: ["sa", "shi", "su", "se", "so"] },
+    { character: "せ", romanized: "se", choices: ["sa", "shi", "su", "se", "so"] },
+    { character: "そ", romanized: "so", choices: ["sa", "shi", "su", "se", "so"] },
+    // Add more hiragana characters and romanized versions as needed
+];
+let currentIndex = 0;
 
-// Add an event listener to the generate button to handle the click event
-generateBtn.addEventListener("click", generatePassword);
+const hiraganaCharElement = document.getElementById("hiraganaChar");
+const choicesElement = document.getElementById("choices");
+const resultElement = document.getElementById("result");
+const nextCardButton = document.getElementById("nextCard");
+const startTestButton = document.getElementById("startTest");
 
-// Define a function to generate a password
-function generatePassword() {
-  var length = Number(prompt("Enter a password length between 8 and 128"));
-  var charType = prompt("Enter a character type: special, numeric, uppercase, lowercase.");
-  
-  // Get a reference to the password element where you will display the generated password
-  var passwordField = document.getElementById("password");
+function displayHiragana() {
+    const currentCard = hiraganaChars[currentIndex];
+    hiraganaCharElement.textContent = currentCard.character;
+    
+    // Clear previous choices
+    choicesElement.innerHTML = "";
 
-  // Call the writePassword function to generate the password
-  var password = writePassword(length, charType);
+    // Add multiple-choice options
+    currentCard.choices.forEach((choice) => {
+        const choiceButton = document.createElement("button");
+        choiceButton.textContent = choice;
+        choiceButton.addEventListener("click", () => checkAnswer(choice, currentCard.romanized));
+        choicesElement.appendChild(choiceButton);
+    });
 
-  // Display the generated password in the password element
-  passwordField.textContent = password;
+    resultElement.textContent = "";
 }
 
-// Define a function to generate the actual password
-function writePassword(length, charType) {
-  var chars = {
-    lowercase: 'abcdefghijklmnopqrstuvwxyz',
-    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    numeric: '0123456789',
-    special: ' !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-  };
-  
-  charType = charType.toLowerCase(); // Convert charType to lowercase
-  
-  // Validate charType and use lowercase characters by default if invalid input
-  if (!(charType in chars)) {
-    charType = 'lowercase';
-  }
-  
-  var selectedChars = chars[charType];
-  var password = "";
-
-  for (var i = 0; i < length; i++) {
-    var randomIndex = Math.floor(Math.random() * selectedChars.length);
-    password += selectedChars.charAt(randomIndex);
-  }
-
-  return password;
+function checkAnswer(userAnswer, correctAnswer) {
+    if (userAnswer === correctAnswer) {
+        resultElement.textContent = "Correct!";
+    } else {
+        resultElement.textContent = "Incorrect. Try again.";
+    }
 }
+
+function nextCard() {
+    currentIndex++;
+    if (currentIndex >= hiraganaChars.length) {
+        currentIndex = 0;
+    }
+    displayHiragana();
+}
+
+function startTest() {
+    currentIndex = 0;
+    displayHiragana();
+    nextCardButton.style.display = "block";
+    startTestButton.style.display = "none";
+}
+
+nextCardButton.addEventListener("click", nextCard);
+startTestButton.addEventListener("click", startTest);
+
+// Hide the "Next Card" button initially
+nextCardButton.style.display = "none";
 
 
 
