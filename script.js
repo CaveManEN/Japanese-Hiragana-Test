@@ -66,6 +66,8 @@ function nextCard() {
 }
 
 function startTest() {
+    // Shuffle the hiraganaChars array before starting the test
+    shuffleArray(hiraganaChars);
     currentIndex = 0;
     displayHiragana();
     nextCardButton.style.display = "block";
